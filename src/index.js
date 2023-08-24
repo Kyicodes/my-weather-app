@@ -46,6 +46,37 @@ function weather(response) {
   windElement.innerHTML = `Wind speed: ${windValue}`;
 }
 
+// Forecast display
+function forecastDisplay() {
+  let forecastElement = document.querySelector("#forecast");
+  let days = ["Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  let forecastHTML = `<div class="row">`;
+  days.forEach(function (day) {
+    forecastHTML =
+      forecastHTML +
+      ` 
+      <div class="col-2">
+          <div class"forecast-date">${day}</div>
+          <img
+            src="http://shecodes-assets.s3.amazonaws.com/api/weather/icons/clear-sky-day.png"
+            alt=""
+            width="43"
+          />
+          <div class="forecast-tempetures">
+          <span class "forecast-min">66°</span>|<span class "forecast-max">83°
+          </span>
+          </div>
+
+        </div>
+ `;
+  });
+
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
+  console.log(forecastHTML);
+}
+
 function findCity(city) {
   let url = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=imperial`;
   axios.get(`${url}`).then(weather);
@@ -103,3 +134,4 @@ fahrenheitButton.addEventListener("click", fahrenheitClick);
 let currentLocatonButton = document.querySelector("#current-location");
 currentLocatonButton.addEventListener("click", getCurrentLocation);
 findCity("Detroit");
+forecastDisplay();
