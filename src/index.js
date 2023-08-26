@@ -26,6 +26,11 @@ function dateFormat(date) {
   return `${day} ${hours}:${minutes}`;
 }
 
+function getForecast(coordinates) {
+  let apiKey = "55ea3bd4ftf0bf63c7f231oa6c374c08";
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?lon=${coordinates.latitude}&lat=${coordinates.longitude}&key=${apiKey}`;
+  axios.get(apiUrl).then(forecastDisplay);
+}
 // Weather disply
 function weather(response) {
   let weatherDecription = document.querySelector(".description");
@@ -44,38 +49,48 @@ function weather(response) {
   humidityValue.innerHTML = `Humidity: ${response.data.temperature.humidity}`;
   iconElement.setAttribute("src", response.data.condition.icon_url);
   windElement.innerHTML = `Wind speed: ${windValue}`;
+  console.log(response.data);
+  getForecast(response.data.coordinates);
 }
 
 // Forecast display
-function forecastDisplay() {
+function forecastDisplay(response) {
+  let forecast = response.data.daily;
+
   let forecastElement = document.querySelector("#forecast");
   let days = ["Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   let forecastHTML = `<div class="row">`;
-  days.forEach(function (day) {
-    forecastHTML =
-      forecastHTML +
-      ` 
+  forecast.forEach(function (forecastDay, index) {
+    if (index < 6) {
+      forecastHTML =
+        forecastHTML +
+        ` 
       <div class="col-2">
-          <div class"forecast-date">${day}</div>
+          <div class"forecast-date">${forecastDay.time}</div>
           <img
-            src="http://shecodes-assets.s3.amazonaws.com/api/weather/icons/clear-sky-day.png"
+            src="http://shecodes-assets.s3.amazonaws.com/api/weather/icons/${
+              forecastDay.condition.icon
+            }"
             alt=""
             width="43"
           />
           <div class="forecast-tempetures">
-          <span class "forecast-min">66°</span>|<span class "forecast-max">83°
-          </span>
+          <span class "forecast-min">${Math.round(
+            forecastDay.temperature.minimum
+          )}°</span>|
+          <span class "forecast-max">${Math.round(
+            forecastDay.temperature.maximum
+          )}°</span>
           </div>
 
         </div>
  `;
+    }
   });
-
-  forecastHTML = forecastHTML + `</div>`;
-  forecastElement.innerHTML = forecastHTML;
-  console.log(forecastHTML);
 }
+forecastHTML = forecastHTML + `</div>`;
+forecastElement.innerHTML = forecastHTML;
 
 function findCity(city) {
   let url = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=imperial`;
