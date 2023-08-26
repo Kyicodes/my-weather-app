@@ -27,8 +27,9 @@ function dateFormat(date) {
 }
 
 function getForecast(coordinates) {
+  console.log({ coordinates });
   let apiKey = "55ea3bd4ftf0bf63c7f231oa6c374c08";
-  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?lon=${coordinates.latitude}&lat=${coordinates.longitude}&key=${apiKey}`;
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?lat=${coordinates.latitude}&lon=${coordinates.longitude}&key=${apiKey}&units=imperial`;
   axios.get(apiUrl).then(forecastDisplay);
 }
 // Weather disply
@@ -53,12 +54,19 @@ function weather(response) {
   getForecast(response.data.coordinates);
 }
 
+// format date
+function formateDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDay();
+  let days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  return days[day];
+}
+
 // Forecast display
 function forecastDisplay(response) {
   let forecast = response.data.daily;
-
   let forecastElement = document.querySelector("#forecast");
-  let days = ["Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   let forecastHTML = `<div class="row">`;
   forecast.forEach(function (forecastDay, index) {
@@ -67,11 +75,11 @@ function forecastDisplay(response) {
         forecastHTML +
         ` 
       <div class="col-2">
-          <div class"forecast-date">${forecastDay.time}</div>
+          <div class"forecast-date">${formateDay(forecastDay.time)}</div>
           <img
             src="http://shecodes-assets.s3.amazonaws.com/api/weather/icons/${
               forecastDay.condition.icon
-            }"
+            }.png"
             alt=""
             width="43"
           />
@@ -88,9 +96,9 @@ function forecastDisplay(response) {
  `;
     }
   });
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
 }
-forecastHTML = forecastHTML + `</div>`;
-forecastElement.innerHTML = forecastHTML;
 
 function findCity(city) {
   let url = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=imperial`;
@@ -149,4 +157,3 @@ fahrenheitButton.addEventListener("click", fahrenheitClick);
 let currentLocatonButton = document.querySelector("#current-location");
 currentLocatonButton.addEventListener("click", getCurrentLocation);
 findCity("Detroit");
-forecastDisplay();
