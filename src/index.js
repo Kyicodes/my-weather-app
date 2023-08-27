@@ -141,6 +141,14 @@ function fahrenheitClick(event) {
 
 let fahrenheitTemp = null;
 
+//Theme change
+
+function changeTheme() {
+  let body = document.querySelector("body");
+  body.classList.toggle("new-theme");
+}
+
+//Function calls
 let dateChange = document.querySelector("#date");
 let now = new Date();
 dateChange.innerHTML = dateFormat(now);
@@ -156,4 +164,7 @@ fahrenheitButton.addEventListener("click", fahrenheitClick);
 
 let currentLocatonButton = document.querySelector("#current-location");
 currentLocatonButton.addEventListener("click", getCurrentLocation);
+
+let changeThemeButton = document.querySelector(".change-theme");
+changeThemeButton.addEventListener("click", changeTheme);
 findCity("Detroit");
