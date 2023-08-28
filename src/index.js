@@ -106,8 +106,10 @@ function findCity(city) {
 }
 
 function findLocation(position) {
-  let apiKey = "e0a5a97de9a0b7a951e9d154a8f9bad8";
-  let url = `https://api.shecodes.io/weather/v1/current?lon={lon}&lat={lat}&key=${apiKey}&units=imperial`;
+  let apiKey = "55ea3bd4ftf0bf63c7f231oa6c374c08";
+  let lon = position.coords.longitude;
+  let lat = position.coords.latitude;
+  let url = `https://api.shecodes.io/weather/v1/current?lon=${lon}&lat=${lat}&key=${apiKey}&units=imperial`;
   axios.get(`${url}`).then(weather);
 }
 
